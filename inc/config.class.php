@@ -18,13 +18,14 @@ class PluginPluginrightsmanagerConfig extends CommonDBTM {
         return $menu;
     }
     
-    static function canView() {
+    static function canView(): bool {
         return Session::haveRight('config', READ);
     }
     
-    static function canCreate() {
+    static function canCreate(): bool {
         return Session::haveRight('config', UPDATE);
     }
+
     
     function showForm($ID, $options = []) {
         $this->initForm($ID, $options);
