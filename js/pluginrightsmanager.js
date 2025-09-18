@@ -1,11 +1,30 @@
+    // Log JS lors de la soumission du formulaire d'attribution de droits
+    $('form.add-right-form').submit(function(e) {
+        const data = $(this).serializeArray();
+        console.log('[DEBUG JS] Données envoyées:', data);
+    });
 $(document).ready(function() {
-    
+
+    // ✅ Vérification avant soumission du formulaire d'ajout de droits standards uniquement
+    $('form.add-right-form').submit(function(e) {
+        const assignType = $(this).find('select[name="assign_type"]').val();
+        const hasSelection =
+            (assignType === 'user' && $(this).find('select[name="user_id"]').val()) ||
+            (assignType === 'group' && $(this).find('select[name="group_id"]').val()) ||
+            (assignType === 'profile' && $(this).find('select[name="profile_id"]').val());
+
+        if (!hasSelection) {
+            e.preventDefault();
+            Swal.fire('Erreur', 'Veuillez sélectionner un utilisateur, un groupe ou un profil.', 'error');
+        }
+    });
+
     // Gestion du sélecteur dynamique d'assignation
     $('select[name="assign_type"]').change(function() {
         var type = $(this).val();
         var selector = $('#assign_selector');
         var pluginRoot = '/plugins/pluginrightsmanager';
-        
+
         if (type === 'user') {
             $.ajax({
                 url: pluginRoot + '/ajax/users.php',
@@ -64,27 +83,51 @@ $(document).ready(function() {
             selector.html('Sélectionnez d\'abord un type');
         }
     });
-    
+
     // Confirmation de suppression
     window.deleteRight = function(rightId) {
-        if (confirm('Êtes-vous sûr de vouloir supprimer ce droit ?')) {
-            $.ajax({
-                url: '/plugins/pluginrightsmanager/ajax/delete_right.php',
-                type: 'POST',
-                data: {
-                    id: rightId,
-                    _glpi_csrf_token: $('input[name="_glpi_csrf_token"]').val()
-                },
-                success: function(response) {
-                    location.reload();
-                },
-                error: function() {
-                    alert('Erreur lors de la suppression');
-                }
-            });
-        }
+        Swal.fire({
+            title: '🗑️ Supprimer ce droit ?',
+            html: '<p>Cette action est <strong>irréversible</strong>.<br>Souhaitez-vous vraiment continuer ?</p>',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#e74c3c',
+            cancelButtonColor: '#95a5a6',
+            confirmButtonText: 'Oui, supprimer',
+            cancelButtonText: 'Annuler',
+            customClass: {
+                popup: 'swal2-custom-popup',
+                confirmButton: 'swal2-confirm-button',
+                cancelButton: 'swal2-cancel-button'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '/plugins/pluginrightsmanager/ajax/delete_right.php',
+                    type: 'POST',
+                    data: {
+                        id: rightId,
+                        _glpi_csrf_token: $('input[name="_glpi_csrf_token"]').val()
+                    },
+                    success: function(response) {
+                        Swal.fire({
+                            title: '✅ Supprimé !',
+                            text: 'Le droit a été supprimé avec succès.',
+                            icon: 'success',
+                            timer: 2000,
+                            showConfirmButton: false
+                        }).then(() => {
+                            location.reload();
+                        });
+                    },
+                    error: function() {
+                        Swal.fire('❌ Erreur', 'La suppression a échoué.', 'error');
+                    }
+                });
+            }
+        });
     };
-    
+
     // Toggle des droits personnalisés
     $('.toggle-custom-rights').click(function() {
         var pluginName = $(this).data('plugin');
