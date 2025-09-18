@@ -6,7 +6,7 @@ define('RIGHTS_MANAGER_VERSION', '1.0.0');
  * Hook executed during the GLPI boot sequence, before the session is actually loaded
  * and before the initialization of the active plugins.
  */
-function plugin_rightsmanager_boot() {
+function plugin_pluginrightsmanager_boot() {
    // Indicates to GLPI that the `/plugins/rightsmanager/api.php` path is stateless and therefore
    // should not use session cookies nor check for a valid session.
    \Glpi\Http\SessionManager::registerPluginStatelessPath('rightsmanager', '#^/api\.php#');
@@ -17,32 +17,26 @@ function plugin_rightsmanager_boot() {
  *
  * @return void
  */
-function plugin_init_rightsmanager() {
+function plugin_init_pluginrightsmanager() {
    global $PLUGIN_HOOKS, $CFG_GLPI;
 
    //required!
-   $PLUGIN_HOOKS['csrf_compliant']['rightsmanager'] = true;
+   $PLUGIN_HOOKS['csrf_compliant']['pluginrightsmanager'] = true;
 
-   Plugin::registerClass('PluginPluginrightsmanagerProfile', [
-        'classname' => 'PluginPluginrightsmanagerProfile'
-    ]);
+   Plugin::registerClass('PluginPluginrightsmanagerProfile');
     
-    Plugin::registerClass('PluginPluginrightsmanagerRights', [
-        'classname' => 'PluginPluginrightsmanagerRights'
-    ]);
+   Plugin::registerClass('PluginPluginrightsmanagerRights');
     
-    Plugin::registerClass('PluginPluginrightsmanagerConfig', [
-        'classname' => 'PluginPluginrightsmanagerConfig'
-    ]);
+   Plugin::registerClass('PluginPluginrightsmanagerConfig');
     
     // Vérifier les droits d'accès (admin ou super-admin uniquement)
-    if (Session::haveRight('config', UPDATE)) {
-        $PLUGIN_HOOKS['menu_toadd']['pluginrightsmanager'] = [
-            'admin' => 'PluginPluginrightsmanagerConfig'
-        ];
+   if (Session::haveRight('config', UPDATE)) {
+      $PLUGIN_HOOKS['menu_toadd']['pluginrightsmanager'] = [
+         'admin' => 'PluginPluginrightsmanagerConfig'
+      ];
         
-        $PLUGIN_HOOKS['config_page']['pluginrightsmanager'] = 'front/config.php';
-    }
+      $PLUGIN_HOOKS['config_page']['pluginrightsmanager'] = 'front/config.php';
+   }
 
 }
 
@@ -51,7 +45,7 @@ function plugin_init_rightsmanager() {
  *
  * @return array
  */
-function plugin_version_rightsmanager() {
+function plugin_version_pluginrightsmanager() {
    return [
       'name'           => 'Plugin Rights Manager',
       'version'        => RIGHTS_MANAGER_VERSION,
@@ -71,7 +65,7 @@ function plugin_version_rightsmanager() {
  *
  * @return boolean
  */
-function plugin_rightsmanager_check_prerequisites() {
+function plugin_pluginrightsmanager_check_prerequisites() {
    if (version_compare(GLPI_VERSION, '10.0.0', 'lt')) {
         echo "Ce plugin nécessite GLPI >= 10.0.0";
         return false;
@@ -87,7 +81,7 @@ function plugin_rightsmanager_check_prerequisites() {
  *
  * @return boolean
  */
-function plugin_rightsmanager_check_config($verbose = false) {
+function plugin_pluginrightsmanager_check_config($verbose = false) {
    return true;
 }
 
@@ -96,7 +90,7 @@ function plugin_rightsmanager_check_config($verbose = false) {
  *
  * @return array
  */
-// function plugin_rightsmanager_options() {
+// function plugin_pluginrightsmanager_options() {
 //    return [
 //       Plugin::OPTION_AUTOINSTALL_DISABLED => true,
 //    ];
