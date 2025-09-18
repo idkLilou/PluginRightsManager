@@ -13,7 +13,6 @@ global $DB;
 
 $query = "SELECT id, name 
           FROM glpi_groups 
-          WHERE is_deleted = 0 
           ORDER BY name";
 
 $result = $DB->query($query);
