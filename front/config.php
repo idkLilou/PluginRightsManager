@@ -10,6 +10,7 @@ Html::header(
     'admin',
     'PluginPluginrightsmanagerConfig'
 );
+    echo '<link rel="stylesheet" type="text/css" href="' . $CFG_GLPI['root_doc'] . '/plugins/pluginrightsmanager/css/pluginrightsmanager.css">';
 
 $config = new PluginPluginrightsmanagerConfig();
 $config->showForm(1);
