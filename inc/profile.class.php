@@ -78,5 +78,4 @@ class PluginPluginrightsmanagerProfile extends Profile {
         return $rights;
     }
 }
-
 // Fonctions utilitaires supplémentaires
