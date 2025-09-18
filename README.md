@@ -18,6 +18,7 @@ Le **Plugin Rights Manager** est un plugin avancé pour GLPI qui permet une gest
 - **🛡️ Sécurité renforcée** avec contrôle d'accès strict
 - **🌐 Interface multilingue** (Français/Anglais)
 - **📱 Interface responsive** et moderne
+- **🔎 Barre de recherche** pour filtrer les plugins par nom
 
 ## 📦 Installation
 
@@ -50,6 +51,19 @@ chmod -R 755 pluginrightsmanager
 3. Trouvez "Plugin Rights Manager" et cliquez sur **Installer**
 4. Cliquez sur **Activer**
 
+### ⚠️ Étape supplémentaire après activation
+
+Pour des raisons de sécurité, **vous devez ajouter manuellement un droit dans la table `glpi_plugin_pluginrightsmanager_configs`** via phpMyAdmin ou votre visualiseur de base de données préféré pour accéder à l'affichage du plugin :
+
+- Ouvrez phpMyAdmin (ou équivalent)
+- Accédez à la base de données de GLPI
+- Rendez-vous dans la table `glpi_plugin_pluginrightsmanager_configs`
+- Ajoutez une nouvelle entrée avec :
+    - `name` : `access`
+    - `value` : `1`
+
+> Sans cette étape, le plugin ne sera pas visible dans le menu même après activation.
+
 ## 🚀 Utilisation
 
 ### Accès au plugin
@@ -62,6 +76,7 @@ Le plugin est accessible via : **Administration → Plugin Rights Manager**
 
 #### 1. Vue d'ensemble des plugins
 - La page principale affiche tous les plugins actifs détectés
+- Une barre de recherche permet de filtrer les plugins par nom
 - Chaque plugin présente ses informations (nom, version, statut)
 - Cliquez sur **"Gérer les droits"** pour configurer les permissions
 
@@ -99,28 +114,31 @@ Pour chaque plugin, vous pouvez créer des droits spécifiques :
 ### Structure des fichiers
 
 ```
-pluginrightsmanager/
-├── 📄 setup.php                      # Configuration principale
-├── 📄 hook.php                       # Hooks d'installation
-├── 📁 inc/                           # Classes PHP
-│   ├── config.class.php              # Configuration du plugin
-│   ├── rights.class.php              # Gestion des droits
-│   ├── profile.class.php             # Gestion des profils
-│   ├── rightsvalidator.class.php     # Validation des droits
-│   └── hook.class.php                # Hooks système
-├── 📁 front/                         # Pages web
-│   ├── config.php                    # Page principale
-│   └── rights.form.php               # Formulaires de droits
-├── 📁 ajax/                          # Endpoints AJAX
-│   ├── users.php                     # Chargement utilisateurs
-│   ├── groups.php                    # Chargement groupes
-│   ├── profiles.php                  # Chargement profils
-│   └── delete_right.php              # Suppression droits
-├── 📁 css/                           # Styles
-├── 📁 js/                            # Scripts JavaScript
-└── 📁 locales/                       # Traductions
-    ├── fr_FR.php
-    └── en_GB.php
+📁 pluginrightsmanager/
+├── 📄 setup.php
+├── 📄 hook.php
+├── 📄 README.md
+├── 📁 inc/
+│   ├── 📄 config.class.php
+│   ├── 📄 rights.class.php
+│   ├── 📄 profile.class.php
+│   ├── 📄 rightsvalidator.class.php
+│   └── 📄 hook.class.php
+├── 📁 front/
+│   ├── 📄 config.php
+│   └── 📄 rights.form.php
+├── 📁 ajax/
+│   ├── 📄 users.php
+│   ├── 📄 groups.php
+│   ├── 📄 profiles.php
+│   └── 📄 delete_right.php
+├── 📁 css/
+│   └── 📄 pluginrightsmanager.css
+├── 📁 js/
+│   └── 📄 pluginrightsmanager.js
+└── 📁 locales/
+    ├── 📄 fr_FR.php
+    └── 📄 en_GB.php
 ```
 
 ### Base de données
@@ -181,6 +199,7 @@ function plugin_init_monplugin() {
 **Plugin non visible dans le menu**
 - Vérifiez votre profil utilisateur (admin/super-admin requis)
 - Confirmez que le plugin est activé
+- **Vérifiez que l'entrée `access` existe dans la table `glpi_plugin_pluginrightsmanager_configs`**
 
 **Erreurs JavaScript**
 - Vérifiez la console navigateur
@@ -224,6 +243,7 @@ Les contributions sont les bienvenues ! Pour contribuer :
 - ✨ API pour développeurs
 - ✨ Support multilingue
 - ✨ Documentation complète
+- ✨ Barre de recherche sur la liste des plugins
 
 ## 🐛 Signaler un bug
 
