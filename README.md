@@ -146,7 +146,6 @@ Pour chaque plugin, vous pouvez créer des droits spécifiques :
 Le plugin crée 3 tables :
 
 - `glpi_plugin_pluginrightsmanager_rights` : Droits principaux
-- `glpi_plugin_pluginrightsmanager_custom_rights` : Droits personnalisés
 - `glpi_plugin_pluginrightsmanager_configs` : Configuration
 
 ## 🔧 API pour développeurs
